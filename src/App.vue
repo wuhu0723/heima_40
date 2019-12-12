@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    aa
     <!-- 在根组件中只需要添加路由映射组件的展示区域 -->
     <router-view></router-view>
   </div>
