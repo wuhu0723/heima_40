@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='less' >
     .btn {
         // vw: viewport width:视口宽度
         // vh:viewport height:视口高度
