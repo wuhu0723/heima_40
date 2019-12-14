@@ -6,19 +6,20 @@
         <img :src="currentUser.head_img" alt />
         <div class="profile-center">
           <div class="name">
-            <span class="iconfont iconxingbienan"></span>{{currentUser.nickname}}
+            <span class="iconfont iconxingbienan"></span>
+            {{currentUser.nickname}}
           </div>
           <div class="time">2019-12-24</div>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
     </router-link>
-    <hmcell title='我的关注' desc='关注的用户'></hmcell>
-    <hmcell title='我的跟帖' desc='跟帖/回复'></hmcell>
-    <hmcell title='我的收藏' desc='文章/视频'></hmcell>
-    <hmcell title='设置' desc=''></hmcell>
+    <hmcell title="我的关注" desc="关注的用户"></hmcell>
+    <hmcell title="我的跟帖" desc="跟帖/回复"></hmcell>
+    <hmcell title="我的收藏" desc="文章/视频"></hmcell>
+    <hmcell title="设置" desc></hmcell>
     <div class="exit">
-      <hmbutton text='退出' class="exitBtn"></hmbutton>
+      <hmbutton text="退出" class="exitBtn"></hmbutton>
     </div>
   </div>
 </template>
@@ -34,7 +35,8 @@ export default {
     }
   },
   components: {
-    hmcell, hmbutton
+    hmcell,
+    hmbutton
   },
   mounted () {
     let id = this.$route.params.id
@@ -45,9 +47,12 @@ export default {
           this.currentUser = res.data.data
           // 返回的数据可能没有图片数据，那么我们应该进行判断，如果有图片数据，则设置为当前图片，如果没有图片数据则需要设置为默认图片
           if (this.currentUser.head_img) {
-            this.currentUser.head_img = localStorage.getItem('hm_40_baseURL') + this.currentUser.head_img
+            this.currentUser.head_img =
+              localStorage.getItem('hm_40_baseURL') + this.currentUser.head_img
           } else {
-            this.currentUser.head_img = localStorage.getItem('hm_40_baseURL') + '/uploads/image/default.png'
+            this.currentUser.head_img =
+              localStorage.getItem('hm_40_baseURL') +
+              '/uploads/image/default.png'
           }
         }
       })
@@ -60,13 +65,13 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.personal{
-    width: 100vw;
-    height: 100vh;
-    background-color: #eee;
+.personal {
+  width: 100vw;
+  height: 100vh;
+  background-color: #eee;
 }
-a{
-    color: #666;
+a {
+  color: #666;
 }
 .profile {
   display: flex;
@@ -104,5 +109,8 @@ a{
   // /deep/.exitBtn{
   //   margin: 0 auto!important;
   // }
+}
+/deep/.exitBtn {
+  margin: 50px auto !important;
 }
 </style>
