@@ -4,6 +4,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
 import Personal from '@/views/Personal.vue'
 import EditPersonal from '@/views/editPersonal.vue'
 
@@ -17,6 +18,11 @@ var router = new VueRouter({
       name: 'login',
       path: '/login',
       component: Login
+    },
+    {
+      name: 'Register',
+      path: '/register',
+      component: Register
     },
     {
       name: 'Personal',
