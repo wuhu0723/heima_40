@@ -14,8 +14,14 @@
         <!-- 如果需要使用ref的方式获取数据，不能添加clearable -->
       <van-field required :value='current.nickname' label="昵称" placeholder="请输入昵称" ref='nickname'/>
     </van-dialog>
-    <hmcell title="密码" :desc="current.password"></hmcell>
-    <hmcell title="性别" :desc="current.gender"></hmcell>
+    <hmcell title="密码" :desc="current.password" type='password'  @click="passshow=!passshow"></hmcell>
+    <van-dialog v-model="passshow" title="修改密码" show-cancel-button @confirm='updatePassword' :before-close='beforeClose'>
+        <!-- 如果需要使用ref的方式获取数据，不能添加clearable -->
+      <van-field required label="原密码" placeholder="请输入原密码" ref='oldPwd'/>
+      <van-field required label="新密码" placeholder="请输入新密码" ref='newPwd'/>
+    </van-dialog>
+
+    <hmcell title="性别" :desc="current.gender===1?'男':'女'"></hmcell>
   </div>
 </template>
 
@@ -29,7 +35,8 @@ export default {
     return {
       id: '',
       current: {},
-      nickshow: false
+      nickshow: false,
+      passshow: false
     }
   },
   components: {
@@ -64,7 +71,7 @@ export default {
       // 3.发起异步请求实现文件上传
       let res = await uploadFile(formdata)
       if (res.data.message === '文件上传成功') {
-        // 4.实现用户头像数据的更新
+        // 4.实现用户头像数据的更新--编辑用户信息啦
         // 让我们可以以同步的方式调用异步方法
         let res1 = await editUser(this.id, { head_img: res.data.data.url })
         console.log(res1)
@@ -91,6 +98,50 @@ export default {
         this.current.nickname = nickname
       } else {
         this.$toast.fail('修改昵称失败')
+      }
+    },
+    // 修改密码
+    async updatePassword () {
+      // 1.获取原密码
+      let oldPwd = this.$refs.oldPwd.$refs.input.value
+      // 2.判断输入的原密码是否和真正的原始密码一致
+      if (this.current.password === oldPwd) {
+        let password = this.$refs.newPwd.$refs.input.value
+        if (!/\w{3,16}/.test(password)) {
+          this.$toast.fail('请输入3~16位的新密码')
+          return
+        }
+        // 3.调用api方法进行密码的更新
+        let res = await editUser(this.id, { password })
+        console.log(res)
+        if (res.data.message === '修改成功') {
+          this.$toast.success('修改成功')
+          localStorage.removeItem('heima_40_token')
+          localStorage.removeItem('hm_40_baseURL')
+          this.$router.push({ name: 'login' })
+        }
+      } else {
+        this.$toast.fail('原始密码输入不正确')
+      }
+    },
+    // 修改密码模态框消失前的属性监听
+    // action是当前操作的类型：confirm   cancel
+    // done():可以关闭当前模态框
+    // done(false):不关闭当前模态框
+    beforeClose (action, done) {
+      // 1.获取原密码
+      let oldPwd = this.$refs.oldPwd.$refs.input.value
+      let password = this.$refs.newPwd.$refs.input.value
+      // 2.判断输入的原密码是否和真正的原始密码一致
+      // 只有单击了确定的时候才需要让原始密码输入正确
+      if (action === 'confirm' && this.current.password !== oldPwd) {
+        this.$toast.fail('原始密码输入不正确')
+        done(false)
+      } else if (action === 'confirm' && !/\w{3,16}/.test(password)) {
+        this.$toast.fail('请输入3~16位的新密码')
+        done(false)
+      } else {
+        done()
       }
     }
   }

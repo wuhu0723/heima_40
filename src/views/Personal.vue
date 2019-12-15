@@ -46,6 +46,7 @@ export default {
         if (res.data.message === '获取成功') {
           this.currentUser = res.data.data
           // 返回的数据可能没有图片数据，那么我们应该进行判断，如果有图片数据，则设置为当前图片，如果没有图片数据则需要设置为默认图片
+          // 通过观察数据表中的数据可以看到，图片数据只是目录+文件名，所以我们需要在前面拼接 服务器地址
           if (this.currentUser.head_img) {
             this.currentUser.head_img =
               localStorage.getItem('hm_40_baseURL') + this.currentUser.head_img

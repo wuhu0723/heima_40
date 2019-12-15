@@ -1,16 +1,16 @@
 <template>
   <div class="cell" @click="handlerclick">
       <div class="left">{{title}}</div>
-      <div class="right">{{desc}}
+      <div class="right">{{type==='password'?"******":desc}}
           <!-- <van-icon name="arrow" /> -->
           <span class="iconfont iconjiantou1"></span>
-          </div>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['title', 'desc'],
+  props: ['title', 'desc', 'type'],
   methods: {
     handlerclick (event) {
       this.$emit('click', event)
