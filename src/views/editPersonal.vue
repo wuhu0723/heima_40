@@ -21,7 +21,14 @@
       <van-field required label="新密码" placeholder="请输入新密码" ref='newPwd'/>
     </van-dialog>
 
-    <hmcell title="性别" :desc="current.gender===1?'男':'女'"></hmcell>
+    <hmcell title="性别" :desc="current.gender===1?'男':'女'"   @click="gendershow=!gendershow"></hmcell>
+    <van-dialog v-model="gendershow" title="修改性别" show-cancel-button @confirm='updateGender'>
+      <van-picker
+        :columns="['女','男']"
+        :default-index="current.gender"
+        @change="onChange"
+      />
+    </van-dialog>
   </div>
 </template>
 
@@ -36,7 +43,9 @@ export default {
       id: '',
       current: {},
       nickshow: false,
-      passshow: false
+      passshow: false,
+      gendershow: false,
+      genderIndex: ''
     }
   },
   components: {
@@ -143,6 +152,21 @@ export default {
       } else {
         done()
       }
+    },
+    // 修改性别
+    async updateGender () {
+      let res = await editUser(this.id, { gender: this.genderIndex })
+      console.log(res)
+      if (res.data.message === '修改成功') {
+        this.$toast.success('修改性别成功')
+        this.current.gender = this.genderIndex
+      } else {
+        this.$toast.fail('修改性别失败')
+      }
+    },
+    // picker切换时触发的事件
+    onChange (picker, value, index) {
+      this.genderIndex = index
     }
   }
 }
