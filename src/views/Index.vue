@@ -31,6 +31,16 @@ export default {
       cateList: []
     }
   },
+  watch: {
+    active () {
+      // 获取当前栏目的新闻数据
+      // 如果当前栏目的新闻列表数据长度为0,说明还没有获取过这个栏目的新闻数据，那么就需要发起请求获取数据
+      // 如果已经有数据，则无需再次发起请求
+      if (this.cateList[this.active].postList.length === 0) {
+        this.getPostList()
+      }
+    }
+  },
   async mounted () {
     // 获取所有栏目数据
     let res = await getCateList()
@@ -46,15 +56,21 @@ export default {
           pageSize: 5 // 当前栏目每页所显示的新闻数量
         }
       })
+      this.getPostList()
+    }
+  },
+  methods: {
+    // 获取栏目的新闻数据
+    async getPostList () {
       // 获取默认栏目的新闻数据
-      let res1 = await getArticleList({
+      let res = await getArticleList({
         pageIndex: this.cateList[this.active].pageIndex,
         pageSize: this.cateList[this.active].pageSize,
         category: this.cateList[this.active].id
       })
-      console.log(res1)
+      console.log(res)
       // 新闻数据存储在当前栏目的postList中，每个栏目都有一个单独的文章列表数组
-      this.cateList[this.active].postList = res1.data.data
+      this.cateList[this.active].postList = res.data.data
     }
   }
 }
