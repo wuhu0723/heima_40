@@ -5,12 +5,12 @@
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
-      <span class="">关注</span>
+      <span @click="followThisUser" :class='{active:article.has_follow}'>{{article.has_follow?'已关注':'关注'}}</span>
     </div>
     <div class="detail">
       <div class="title">{{article.title}}</div>
       <div class="desc">
-        <span>{{article.user.nickname}}</span> &nbsp;&nbsp;
+        <span>{{article.user && article.user.nickname}}</span> &nbsp;&nbsp;
         <span>2019-12-19</span>
       </div>
       <div class="content" v-html='article.content' v-if='article.type===1'></div>
@@ -45,6 +45,7 @@
 
 <script>
 import { getArticleDetail } from '@/api/article.js'
+import { followUser, unFollowUser } from '@/api/users.js'
 export default {
   data () {
     return {
@@ -57,6 +58,21 @@ export default {
     console.log(res)
     if (res.status === 200) {
       this.article = res.data.data
+    }
+  },
+  methods: {
+    async followThisUser () {
+      let res
+      // 判断当前的关注状态,如果是未关注,则调用关注方法,如果是已关注则调用取消关注方法
+      if (this.article.has_follow === true) { // 已关注
+        res = await unFollowUser(this.article.user.id)
+      } else { // 未关注
+        res = await followUser(this.article.user.id)
+      }
+      // 提示
+      this.$toast.success(res.data.message)
+      // 修改元素所绑定的数据,实现页面元素效果的刷新
+      this.article.has_follow = !this.article.has_follow
     }
   }
 }
