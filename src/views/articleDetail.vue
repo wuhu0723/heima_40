@@ -13,8 +13,8 @@
         <span>{{article.user.nickname}}</span> &nbsp;&nbsp;
         <span>2019-12-19</span>
       </div>
-      <div class="content" v-html='article.content'>
-      </div>
+      <div class="content" v-html='article.content' v-if='article.type===1'></div>
+      <video v-if='article.type===2' :src='article.content' controls></video>
       <div class="opt">
         <span class="like">
           <van-icon name="good-job-o" />{{article.like_length}}
@@ -115,6 +115,10 @@ export default {
     font-size: 15px;
     padding-bottom: 30px;
     width: 100%;
+  }
+  video{
+      width: 100%;
+      margin-bottom: 10px;
   }
 }
 .opt {
