@@ -30,3 +30,11 @@ export const collectArticleById = (id) => {
     url: `/post_star/${id}`
   })
 }
+
+// 5. 当前文章评论数据
+export const getCommentsById = (id, params) => {
+  return axios({
+    url: `/post_comment/${id}`,
+    params
+  })
+}

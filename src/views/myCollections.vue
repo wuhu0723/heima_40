@@ -4,7 +4,12 @@
       <span slot="left" class="iconfont iconjiantou2" @click="$router.back()"></span>
     </myheader>
     <div class="list">
-      <articleblock v-for='item in collectList' :key='item.id' :post='item'></articleblock>
+      <van-swipe-cell v-for="item in collectList" :key="item.id" >
+        <articleblock :post="item"></articleblock>
+        <template slot="right">
+          <van-button square type="danger" text="删除" @click="del(item.id)"/>
+        </template>
+      </van-swipe-cell>
     </div>
   </div>
 </template>
@@ -28,6 +33,11 @@ export default {
     console.log(res)
     if (res.status === 200) {
       this.collectList = res.data.data
+    }
+  },
+  methods: {
+    del (id) {
+      alert(id)
     }
   }
 }
