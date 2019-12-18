@@ -63,3 +63,10 @@ export const getMyFollows = (id) => {
     url: `/user_follows`
   })
 }
+
+// 9.获取我的收藏
+export const getMyCollections = (id) => {
+  return axios({
+    url: `/user_star`
+  })
+}
