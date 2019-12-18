@@ -7,8 +7,9 @@
       </div>
       <van-icon name="manager-o" class="icon" @click="jump"/>
     </div>
+    <!-- 1.标签页 -->
     <van-tabs v-model="active" sticky swipeable>
-      <!-- 上拉加载 -->
+      <!-- 2.上拉加载 -->
       <van-tab :title="cate.name" v-for='cate in cateList' :key='cate.id'>
         <van-list
           :immediate-check='false'
@@ -18,7 +19,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-        <!-- 下拉刷新 -->
+        <!-- 3.下拉刷新 -->
         <van-pull-refresh v-model="cate.isLoading" @refresh="onRefresh">
            <!-- 动态渲染当前栏目的新闻数据 -->
            <articleblock v-for='post in cate.postList' :key='post.id' :post='post'></articleblock>

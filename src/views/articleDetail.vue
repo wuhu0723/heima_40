@@ -5,7 +5,10 @@
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
-      <span @click="followThisUser" :class='{active:article.has_follow}'>{{article.has_follow?'已关注':'关注'}}</span>
+      <span
+        @click="followThisUser"
+        :class="{active:article.has_follow}"
+      >{{article.has_follow?'已关注':'关注'}}</span>
     </div>
     <div class="detail">
       <div class="title">{{article.title}}</div>
@@ -13,11 +16,12 @@
         <span>{{article.user && article.user.nickname}}</span> &nbsp;&nbsp;
         <span>2019-12-19</span>
       </div>
-      <div class="content" v-html='article.content' v-if='article.type===1'></div>
-      <video v-if='article.type===2' :src='article.content' controls></video>
+      <div class="content" v-html="article.content" v-if="article.type===1"></div>
+      <video v-if="article.type===2" :src="article.content" controls></video>
       <div class="opt">
-        <span class="like">
-          <van-icon name="good-job-o" />{{article.like_length}}
+        <span class="like" :class="{active:article.has_like}" @click='likeThisArticle'>
+          <van-icon name="good-job-o" />
+          {{article.like_length}}
         </span>
         <span class="chat">
           <van-icon name="chat" class="w" />微信
@@ -40,13 +44,19 @@
       </div>
       <div class="more">更多跟帖</div>
     </div>
+    <!-- 评论区域 -->
+    <hmcommentArea :article='article'></hmcommentArea>
   </div>
 </template>
 
 <script>
-import { getArticleDetail } from '@/api/article.js'
+import { getArticleDetail, likeArticleById } from '@/api/article.js'
 import { followUser, unFollowUser } from '@/api/users.js'
+import hmcommentArea from '@/components/hm_commentArea.vue'
 export default {
+  components: {
+    hmcommentArea
+  },
   data () {
     return {
       article: {}
@@ -61,24 +71,44 @@ export default {
     }
   },
   methods: {
+    // 关注和取消关注
     async followThisUser () {
       let res
       // 判断当前的关注状态,如果是未关注,则调用关注方法,如果是已关注则调用取消关注方法
-      if (this.article.has_follow === true) { // 已关注
+      if (this.article.has_follow === true) {
+        // 已关注，那么现在单击就是取消关注
         res = await unFollowUser(this.article.user.id)
-      } else { // 未关注
+      } else {
+        // 未关注，那么现在单击就是关注此用户
         res = await followUser(this.article.user.id)
       }
       // 提示
       this.$toast.success(res.data.message)
       // 修改元素所绑定的数据,实现页面元素效果的刷新
       this.article.has_follow = !this.article.has_follow
+    },
+    // 点赞和取消点赞
+    async likeThisArticle () {
+      let res = await likeArticleById(this.article.id)
+      // 修改元素所绑定的状态-已点赞还是未点赞
+      this.article.has_like = !this.article.has_like
+      if (res.data.message === '点赞成功') {
+        // 重置点赞数量
+        this.article.like_length++
+      } else if (res.data.message === '取消成功') {
+        this.article.like_length--
+      }
+      // 给出提示
+      this.$toast.success(res.data.message)
     }
   }
 }
 </script>
 
 <style lang='less' scoped>
+.articaldetail{
+  padding-bottom: 50px;
+}
 .header {
   padding: 0px 10px;
   height: 50px;
@@ -102,14 +132,14 @@ export default {
   }
   > span {
     padding: 5px 15px;
-    border:1px solid #ccc;
+    border: 1px solid #ccc;
     color: #333;
     text-align: center;
     border-radius: 15px;
     font-size: 13px;
-    &.active{
-        color: #fff;
-        background-color: #f00;
+    &.active {
+      color: #fff;
+      background-color: #f00;
     }
   }
 }
@@ -132,9 +162,9 @@ export default {
     padding-bottom: 30px;
     width: 100%;
   }
-  video{
-      width: 100%;
-      margin-bottom: 10px;
+  video {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
 .opt {
@@ -149,6 +179,11 @@ export default {
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 15px;
+  }
+  .like{
+    &.active{
+      color:red
+    }
   }
   .w {
     color: rgb(84, 163, 5);
@@ -208,10 +243,10 @@ export default {
   }
 }
 
-/deep/.photo{
-    img {
-        width: 100%!important;
-        display: block;
-    }
+/deep/.photo {
+  img {
+    width: 100% !important;
+    display: block;
+  }
 }
 </style>
