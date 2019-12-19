@@ -1,13 +1,18 @@
 <template>
   <div class="commentitem">
     <!-- 添加当前组件 -->
-    <mycomment v-if='comment.parent' :comment='comment.parent'></mycomment>
+    <!-- 我们得让递归组件能够监听下一层组件所发射的事件 -->
+    <mycomment
+    v-if='comment.parent'
+    :comment='comment.parent'
+    @replayComment='sendComment'
+    ></mycomment>
     <div class="head">
       <div>
         <span class="cname">{{comment.user.nickname}}</span>
         <span>2小时前</span>
       </div>
-      <span>回复</span>
+      <span @click="sendComment(comment)">回复</span>
     </div>
     <div class="text">{{comment.content}}</div>
   </div>
@@ -22,7 +27,12 @@ export default {
   //   },
   // 这个名字就相当于注册了当前组件
   name: 'mycomment',
-  props: ['comment']
+  props: ['comment'],
+  methods: {
+    sendComment (comment) {
+      this.$emit('replayComment', comment)
+    }
+  }
 }
 </script>
 

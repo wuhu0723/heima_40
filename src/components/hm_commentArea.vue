@@ -12,7 +12,7 @@
     <div class="inputcomment" v-show='isFocus'>
         <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
         <div>
-            <span>发送</span>
+            <span @click="send">发送</span>
             <span @click='cancelReplay'>取消</span>
         </div>
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { collectArticleById } from '@/api/article.js'
+import { collectArticleById, sendComment } from '@/api/article.js'
 export default {
   props: ['article', 'replayObj'],
   data () {
@@ -31,8 +31,8 @@ export default {
   },
   watch: {
     replayObj () {
-      console.log('112233')
       console.log(this.replayObj)
+      console.log(this.article)
       if (this.replayObj) {
         this.isFocus = true
         this.placeholder = '@' + this.replayObj.user.nickname
@@ -60,6 +60,26 @@ export default {
       // this.replayObj = null
       // 告诉父组件，需要将数据进行重置
       this.$emit('resetValue')
+    },
+    // 发表评论
+    async send () {
+      let data = {
+        content: this.$refs.commtext.value
+      }
+      console.log(data)
+      // 判断是否是回复某一条评论
+      if (this.replayObj) {
+        data.parent_id = this.replayObj.id
+      }
+      let res = await sendComment(this.article.id, data)
+      console.log(res)
+      if (res.data.message === '评论发布成功') {
+        this.$toast.success(res.data.message)
+        this.$refs.commtext.value = ''
+        this.isFocus = false
+        // 通知父组件进行数据的刷新
+        this.$emit('refresh')
+      }
     }
   }
 }

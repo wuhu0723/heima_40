@@ -38,3 +38,12 @@ export const getCommentsById = (id, params) => {
     params
   })
 }
+
+// 6. 发表文章评论--包括回复
+export const sendComment = (id, data) => {
+  return axios({
+    method: 'post',
+    url: `/post_comment/${id}`,
+    data
+  })
+}
