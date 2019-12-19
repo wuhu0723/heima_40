@@ -10,7 +10,7 @@
       <i class="iconfont iconfenxiang"></i>
     </div>
     <div class="inputcomment" v-show='isFocus'>
-        <textarea  ref='commtext' rows="5"></textarea>
+        <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
         <div>
             <span>发送</span>
             <span @click='isFocus=false'>取消</span>
@@ -22,16 +22,23 @@
 <script>
 import { collectArticleById } from '@/api/article.js'
 export default {
-  props: ['article'],
+  props: ['article', 'replayObj'],
   data () {
     return {
-      isFocus: false
+      isFocus: false,
+      placeholder: ''
+    }
+  },
+  watch: {
+    replayObj () {
+      this.isFocus = true
+      this.placeholder = '@' + this.replayObj.user.nickname
     }
   },
   methods: {
     //   获取焦点时触发
     handlerFocus () {
-      this.isFocus = !this.isFocus
+      this.isFocus = true
       setTimeout(() => {
         this.$refs.commtext.focus()
       }, 1)
