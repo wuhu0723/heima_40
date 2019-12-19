@@ -20,7 +20,7 @@
       </div>
     </div>
     <!-- 添加发表评论区域 -->
-    <commentArea :article='article'  :replayObj='parentReplayObj'></commentArea>
+    <commentArea :article='article'  :replayObj='parentReplayObj' @resetValue='parentReplayObj = null'></commentArea>
   </div>
 </template>
 

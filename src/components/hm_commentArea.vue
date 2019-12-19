@@ -13,7 +13,7 @@
         <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
         <div>
             <span>发送</span>
-            <span @click='isFocus=false'>取消</span>
+            <span @click='cancelReplay'>取消</span>
         </div>
     </div>
   </div>
@@ -31,8 +31,12 @@ export default {
   },
   watch: {
     replayObj () {
-      this.isFocus = true
-      this.placeholder = '@' + this.replayObj.user.nickname
+      console.log('112233')
+      console.log(this.replayObj)
+      if (this.replayObj) {
+        this.isFocus = true
+        this.placeholder = '@' + this.replayObj.user.nickname
+      }
     }
   },
   methods: {
@@ -48,6 +52,14 @@ export default {
       let res = await collectArticleById(this.article.id)
       this.$toast.success(res.data.message)
       this.article.has_star = !this.article.has_star
+    },
+    // 取消评论
+    cancelReplay () {
+      this.isFocus = false
+      // 下面这句操作有问题，无法在子组件中直接修改props中定义的变量的值
+      // this.replayObj = null
+      // 告诉父组件，需要将数据进行重置
+      this.$emit('resetValue')
     }
   }
 }
