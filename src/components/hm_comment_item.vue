@@ -30,6 +30,7 @@ export default {
   props: ['comment'],
   methods: {
     sendComment (comment) {
+      console.log('-------------')
       this.$emit('replayComment', comment)
     }
   }

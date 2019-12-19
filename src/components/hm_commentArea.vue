@@ -32,7 +32,6 @@ export default {
   watch: {
     replayObj () {
       console.log(this.replayObj)
-      console.log(this.article)
       if (this.replayObj) {
         this.isFocus = true
         this.placeholder = '@' + this.replayObj.user.nickname
