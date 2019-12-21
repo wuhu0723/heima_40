@@ -47,3 +47,11 @@ export const sendComment = (id, data) => {
     data
   })
 }
+
+// 7.根据关键字进行搜索
+export const searchArticle = (params) => {
+  return axios({
+    url: '/post_search',
+    params
+  })
+}

@@ -2,6 +2,9 @@
   <div class="commentitem">
     <!-- 添加当前组件 -->
     <!-- 我们得让递归组件能够监听下一层组件所发射的事件 -->
+    <!-- 递归组件中的某个元素可以发出事件，这个事件由上一层递归组件来监听
+    只不过上一层递归组件和当前层进行了相同的处理:发生事件
+    这个事件最终由comments进行处理，在这个处理函数中对子组件hm_commentArea.vue赋值 -->
     <mycomment
     v-if='comment.parent'
     :comment='comment.parent'

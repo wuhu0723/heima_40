@@ -12,6 +12,7 @@ import ArticleDetail from '@/views/articleDetail.vue'
 import MyFollow from '@/views/myFollow.vue'
 import MyCollections from '@/views/myCollections.vue'
 import Comments from '@/views/comments.vue'
+import Search from '@/views/search.vue'
 
 // 3. user
 Vue.use(VueRouter)
@@ -63,6 +64,11 @@ var router = new VueRouter({
       name: 'Comments',
       path: '/comments/:id',
       component: Comments
+    },
+    {
+      name: 'Search',
+      path: '/search',
+      component: Search
     }
   ]
 })
