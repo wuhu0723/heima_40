@@ -26,6 +26,7 @@
         </van-pull-refresh>
         </van-list>
       </van-tab>
+      <span style="position:absolute;top:0;right:0;text-align:center;line-height:40px;font-size:30px" @click="$router.push({name:'CateManager'})">+</span>
     </van-tabs>
     <div class="newsList"></div>
   </div>
@@ -56,24 +57,34 @@ export default {
     }
   },
   async mounted () {
+    let list = localStorage.getItem('user_cate_40')
+    // 先获取本地数据，如果是就直接使用本地存储的数据进行栏目的渲染
+    if (list) {
+      this.cateList = JSON.parse(list)
+      this.cateList.unshift({ id: 999, name: '头条', is_top: '1' })
+      if (localStorage.getItem('heima_40_token')) {
+        this.cateList.unshift({ id: 0, name: '关注', is_top: '1' })
+      }
+    } else { // 没有，就发起请求
     // 获取所有栏目数据
-    let res = await getCateList()
-    if (res.status === 200) {
-      this.cateList = res.data.data
-      // 对数据进行改造，添加能够满足业务需求的成员
-      this.cateList = this.cateList.map(value => {
-        return {
-          ...value,
-          postList: [], // 当前栏目的新闻列表数据
-          pageIndex: 1, // 当前栏目的页码
-          pageSize: 5, // 当前栏目每页所显示的新闻数量
-          loading: false, // 当前栏目更多数据加载状态，默认为不在加载数据
-          finished: false, // 数据是否已经完毕加载完毕，默认为没有完毕
-          isLoading: false // 标记是否处于下拉刷新的状态，默认为false
-        }
-      })
-      this.getPostList()
+      let res = await getCateList()
+      if (res.status === 200) {
+        this.cateList = res.data.data
+      }
     }
+    // 对数据进行改造，添加能够满足业务需求的成员
+    this.cateList = this.cateList.map(value => {
+      return {
+        ...value,
+        postList: [], // 当前栏目的新闻列表数据
+        pageIndex: 1, // 当前栏目的页码
+        pageSize: 5, // 当前栏目每页所显示的新闻数量
+        loading: false, // 当前栏目更多数据加载状态，默认为不在加载数据
+        finished: false, // 数据是否已经完毕加载完毕，默认为没有完毕
+        isLoading: false // 标记是否处于下拉刷新的状态，默认为false
+      }
+    })
+    this.getPostList()
   },
   methods: {
     // 跳转到个人中心页
@@ -151,6 +162,9 @@ export default {
       text-align: center;
       border-radius: 20px;
     }
+  }
+  /deep/.van-sticky{
+    padding-right: 40px!important;
   }
 }
 </style>

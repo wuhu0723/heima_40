@@ -13,6 +13,7 @@ import MyFollow from '@/views/myFollow.vue'
 import MyCollections from '@/views/myCollections.vue'
 import Comments from '@/views/comments.vue'
 import Search from '@/views/search.vue'
+import CateManager from '@/views/CateManager.vue'
 
 // 3. user
 Vue.use(VueRouter)
@@ -69,6 +70,11 @@ var router = new VueRouter({
       name: 'Search',
       path: '/search',
       component: Search
+    },
+    {
+      name: 'CateManager',
+      path: '/cateManager',
+      component: CateManager
     }
   ]
 })
